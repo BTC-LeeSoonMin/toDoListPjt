@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HomeController {
 
-    @GetMapping(value ="/api/hello")
-    @ResponseBody
+    @GetMapping("/home")
     public String proxy() { return "hello miniPjt"; }
 
 }

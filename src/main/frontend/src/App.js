@@ -6,14 +6,15 @@ import { BrowserRouter } from 'react-router-dom';
 
 
 const App = () => {
+  
   return (
-    <>
+    
       <BrowserRouter>
         <Header />
         <Home />
         <Footer />
       </BrowserRouter>
-    </>
+    
   );
 }
 
