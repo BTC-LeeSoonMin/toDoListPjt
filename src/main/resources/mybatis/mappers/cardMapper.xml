@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.office.todolist.card.ICardDaoMapper">
+    
+    <insert id="insertCardData" parameterType="com.office.todolist.card.CardDto">
+
+        INSERT INTO
+            tbl_card(c_title, c_body, c_reg_date, c_mod_date)
+        VALUES
+            (#{c_title}, #{c_body}, NOW(), NOW())
+
+    </insert>
+
+    <select id="selectAllCard" resultType="hashmap">
+        SELECT
+            *
+        FROM
+            tbl_card
+        WHERE
+            c_use_yn = "Y"
+    </select>
+
+    <update id="updateCntTask">
+        UPDATE
+            tbl_card
+        SET
+            c_cnt_task = c_cnt_task + 1
+        WHERE
+            c_use_yn = "Y"
+        AND
+            c_no = #{c_no}
+    </update>
+
+    <select id="selectCntTask" resultType="com.office.todolist.card.CardDto">
+        SELECT
+            c_no,
+            c_cnt_task
+        FROM
+            tbl_card
+        WHERE
+            c_use_yn = "Y"
+        AND
+            c_no = #{c_no}
+    </select>
+
+</mapper>

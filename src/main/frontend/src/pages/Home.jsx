@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from "axios";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -16,10 +16,61 @@ import Input from '@mui/material/Input';
 import Textarea from '@mui/joy/Textarea';
 
 function Home() {
+    const taskRef = useRef(0);
+    const [cardList, setCardList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
-    const [cntTask, setCntTask] = useState(0);
+    const [cNo, setCNo] = useState(0);
+    const [cntTask, setCntTask] = useState(taskRef);
     const [cntPin, setCntPin] = useState(0);
+    
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    // useEffect (() => {
+    //     console.log("[Home] useLayoutEffect!!");
+    //     axios.get("/api/card/cardAllList",
+    //         config,
+    //     )
+    //         .then(response =>
+    //             {
+    //                 // console.log(response.data)
+    //                 setCardList(response.data)
+    //             }
+    //         )
+    //         .catch(error => console.log(error))
+
+    // },[]);
+
+    useEffect(() => {
+        console.log("[Home] useEffect!!");
+        console.log("cntTask : ", cntTask);
+        console.log("taskRef : ", taskRef);
+
+        axios.get("/api/card/cardAllList",
+            config,
+        )
+            .then(response => {
+                // console.log(response.data),
+                setCardList(response.data)
+                setIsLoading(false);
+
+            }
+            )
+            .catch(error => console.log(error))
+
+    }, [cntTask]);
+
+    if (isLoading) {
+        // 데이터가 로딩 중인 동안 보여줄 컴포넌트나 로딩 스피너 등을 렌더링
+        return <h1>Loading...</h1>;
+    }
+
 
     const cardStyle = {
         display: 'flex',
@@ -28,24 +79,18 @@ function Home() {
         // 기타 원하는 CSS 속성을 여기에 추가할 수 있습니다.
     };
 
-    const iconClickHendler = async (str) => {
+    const iconClickHendler = async (str, cNo) => {
         console.log("[Home] iconClickHendler");
+        let msgData = {};
+
         switch (str) {
             case ("insert"):
-                console.log('insert hello')
-                // console.log(title)
-                // console.log(body)
+                console.log('insert hello');
 
-                const msgData = {
-
+                msgData = {
                     "title": title,
                     "body": body,
                 }
-                const config = {
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                };
                 await axios.post("/api/card/insert",
                     JSON.stringify(msgData),
                     config,
@@ -55,11 +100,25 @@ function Home() {
                 break;
             case ("taskTogle"):
                 console.log('taskTogle hello')
-                setCntTask(cntTask + 1)
+                msgData = {
+                    "c_no": cNo,
+                }
+                await axios.post("/api/card/getCntTask",
+                    msgData,
+                    config,
+                )
+                    .then(response => {
+                        // console.log(response.data.getC_no);
+                        // console.log(response.data.getCnt_task);
+                        setCNo(response.data.getC_no)
+                        setCntTask(response.data.getCnt_task)
+                    }
+                    )
+                    .catch(error => console.log(error))
                 break;
             case ("pin"):
                 console.log('pin hello')
-                setCntPin(cntPin + 1)
+                // setCntPin(cntPin + 1)
                 break;
             case ("edit"):
                 console.log('edit hello')
@@ -72,6 +131,9 @@ function Home() {
 
     return (
         <div style={cardStyle}>
+            {
+                console.log("return TP")
+            }
             <div>
                 <Card sx={{ maxWidth: 400, minWidth: 400, mt: 1.5, mb: 1.5 }}>
                     <CardContent>
@@ -89,40 +151,49 @@ function Home() {
                     </CardContent>
                 </Card>
             </div>
-            <div>
-                <Card sx={{ maxWidth: 400, minWidth: 400, mt: 1.5, mb: 1.5 }}>
-                    <CardContent>
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Grid container spacing={0}>
-                                <Grid item xs={10.7} sx={{ borderBottom: 1, mb: 1 }}>
-                                </Grid>
-                                <Grid item xs={1.3} sx={{ borderBottom: 1, mb: 1 }}>
-                                    {
-                                        cntTask % 2 === 0 ? <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle')} />
-                                            : <EditAttributesIcon onClick={() => iconClickHendler('taskTogle')} />
-                                    }
-                                </Grid>
-                                <Grid item xs={9}>
-                                    <Typography variant="h5" component="div">
-                                        Heading1
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    {
-                                        cntPin % 2 === 0 ? <PushPinOutlinedIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
-                                            : <PushPinIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
-                                    }
-                                    <EditIcon onClick={() => iconClickHendler('edit')} sx={{ "&:hover": { cursor: "pointer" } }} />
-                                    <CloseIcon onClick={() => iconClickHendler('close')} sx={{ "&:hover": { cursor: "pointer" } }} />
-                                </Grid>
-                            </Grid>
-                        </Box>
-                        <Typography sx={{ mt: 1.5 }} color="text.secondary">
-                            1
-                        </Typography>
-                    </CardContent>
-                </Card>
-            </div>
+            {
+                cardList.map((item, key) => (
+                    <div key={key}>
+                        <Card sx={{ maxWidth: 400, minWidth: 400, mt: 1.5, mb: 1.5 }}>
+                            <CardContent>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Grid container spacing={0}>
+                                        <Grid item xs={10.7} sx={{ borderBottom: 1, mb: 1 }}>
+                                            {item.c_reg_date}
+                                        </Grid>
+                                        <Grid item xs={1.3} sx={{ borderBottom: 1, mb: 1 }}>
+                                            {
+                                                // setCntTask(item.c_cnt_task)
+                                                taskRef.current = item.c_cnt_task
+                                            }
+                                            {
+                                                item.c_no == cNo && cntTask % 2 === 0 ? <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} />
+                                                    : <EditAttributesIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} />
+                                            }
+                                        </Grid>
+                                        <Grid item xs={9}>
+                                            <Typography variant="h5" component="div">
+                                                {item.c_title}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            {
+                                                cntPin % 2 === 0 ? <PushPinOutlinedIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                                    : <PushPinIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                            }
+                                            <EditIcon onClick={() => iconClickHendler('edit')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                            <CloseIcon onClick={() => iconClickHendler('close')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                                <Typography sx={{ mt: 1.5 }} color="text.secondary">
+                                    {item.c_body} {item.c_cnt_task}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </div>
+                ))
+            }
 
         </div>
     );
