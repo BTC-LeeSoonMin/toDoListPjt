@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -16,15 +17,15 @@ import Input from '@mui/material/Input';
 import Textarea from '@mui/joy/Textarea';
 
 function Home() {
-    const taskRef = useRef(0);
     const [cardList, setCardList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [cNo, setCNo] = useState(0);
-    const [cntTask, setCntTask] = useState(taskRef);
+    const [cntTask, setCntTask] = useState(1);
     const [cntPin, setCntPin] = useState(0);
-    
+    const navigate = useNavigate();
+
 
     const config = {
         headers: {
@@ -32,25 +33,9 @@ function Home() {
         }
     };
 
-    // useEffect (() => {
-    //     console.log("[Home] useLayoutEffect!!");
-    //     axios.get("/api/card/cardAllList",
-    //         config,
-    //     )
-    //         .then(response =>
-    //             {
-    //                 // console.log(response.data)
-    //                 setCardList(response.data)
-    //             }
-    //         )
-    //         .catch(error => console.log(error))
-
-    // },[]);
-
     useEffect(() => {
         console.log("[Home] useEffect!!");
         console.log("cntTask : ", cntTask);
-        console.log("taskRef : ", taskRef);
 
         axios.get("/api/card/cardAllList",
             config,
@@ -122,6 +107,8 @@ function Home() {
                 break;
             case ("edit"):
                 console.log('edit hello')
+                navigate("/card/card_modify/" + cNo);
+
                 break;
             case ("close"):
                 console.log('close hello')
@@ -131,9 +118,6 @@ function Home() {
 
     return (
         <div style={cardStyle}>
-            {
-                console.log("return TP")
-            }
             <div>
                 <Card sx={{ maxWidth: 400, minWidth: 400, mt: 1.5, mb: 1.5 }}>
                     <CardContent>
@@ -163,12 +147,13 @@ function Home() {
                                         </Grid>
                                         <Grid item xs={1.3} sx={{ borderBottom: 1, mb: 1 }}>
                                             {
-                                                // setCntTask(item.c_cnt_task)
-                                                taskRef.current = item.c_cnt_task
+                                                // XXXXXX (Too many re-render)
+                                                // CountSetHandler(setCntTask(item.c_cnt_task)) 
                                             }
                                             {
-                                                item.c_no == cNo && cntTask % 2 === 0 ? <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} />
-                                                    : <EditAttributesIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} />
+                                                item.c_no == cNo && cntTask % 2 === 0 ?
+                                                    <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }}/>
+                                                    : <EditAttributesIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
                                         </Grid>
                                         <Grid item xs={9}>
@@ -178,23 +163,23 @@ function Home() {
                                         </Grid>
                                         <Grid item xs={3}>
                                             {
-                                                cntPin % 2 === 0 ? <PushPinOutlinedIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                                cntPin % 2 === 0 ?
+                                                    <PushPinOutlinedIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                                     : <PushPinIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
-                                            <EditIcon onClick={() => iconClickHendler('edit')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                            <EditIcon onClick={() => iconClickHendler('edit', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             <CloseIcon onClick={() => iconClickHendler('close')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                         </Grid>
                                     </Grid>
                                 </Box>
                                 <Typography sx={{ mt: 1.5 }} color="text.secondary">
-                                    {item.c_body} {item.c_cnt_task}
+                                    {item.c_body} / 현재 c_cnt_task 값 : {item.c_cnt_task}
                                 </Typography>
                             </CardContent>
                         </Card>
                     </div>
                 ))
             }
-
         </div>
     );
 }

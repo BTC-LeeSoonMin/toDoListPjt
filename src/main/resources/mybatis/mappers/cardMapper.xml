@@ -45,4 +45,30 @@
             c_no = #{c_no}
     </select>
 
+    <select id="selectCardByCNo" resultType="com.office.todolist.card.CardDto">
+        SELECT
+            *
+        FROM
+            tbl_card
+        WHERE
+            c_use_yn = "Y"
+          AND
+            c_no = #{c_no}
+
+    </select>
+
+    <update id="updateCardInfoByCNo">
+        UPDATE
+            tbl_card
+        SET
+            c_title = #{c_title},
+            c_body = #{c_body},
+            c_mod_date = NOW()
+        WHERE
+            c_use_yn = "Y"
+          AND
+            c_no = #{c_no}
+    </update>
+
+
 </mapper>

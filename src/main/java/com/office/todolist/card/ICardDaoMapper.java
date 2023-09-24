@@ -15,4 +15,7 @@ public interface ICardDaoMapper {
 
     CardDto selectCntTask(CardDto cardDto);
 
+    CardDto selectCardByCNo(CardDto cardDto);
+
+    int updateCardInfoByCNo(CardDto cardDto);
 }

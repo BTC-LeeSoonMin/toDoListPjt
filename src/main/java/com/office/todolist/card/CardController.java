@@ -59,5 +59,33 @@ public class CardController {
         return map;
     }
 
+    @PostMapping("/cardInfoByCNo")
+    public Object cardInfoByCNo(@RequestBody Map<String, Object> msgMap, CardDto cardDto){
+        log.info("cardInfoByCNo");
 
+        Map<String, Object> map = new HashMap<>();
+        cardDto = cardService.getCardInfoByCNo(msgMap, cardDto);
+
+        map.put("cardDto", cardDto);
+
+        return map;
+    }
+
+    @PostMapping("/cardInfoModifyByCNo")
+    public String cardInfoModifyByCNo(@RequestBody Map<String, Object> msgMap, CardDto cardDto){
+        log.info("cardInfoModifyByCNo");
+
+        int result = -1;
+        result = cardService.cardInfoModifyByCNo(msgMap, cardDto);
+
+        if(result > 0){
+            log.info("CARD INFO MODIFY SUCCESS");
+
+            return "1";
+        } else {
+            log.info("CARD INFO MODIFY FAIL");
+
+            return "0";
+        }
+    }
 }

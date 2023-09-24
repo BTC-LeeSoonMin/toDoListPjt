@@ -31,10 +31,12 @@ public class CardService implements ICardService{
         return iCardDaoMapper.selectAllCard();
     }
 
+    @Override
     public CardDto getCntTask(Map<String, Object> msgMap, CardDto cardDto) {
         log.info("getCntTask");
 
         cardDto.setC_no(Integer.parseInt(msgMap.get("c_no").toString()));
+
         int result = -1;
         result = iCardDaoMapper.updateCntTask(cardDto);
         if(result > 0){
@@ -46,5 +48,26 @@ public class CardService implements ICardService{
             return null;
         }
 
+    }
+
+    @Override
+    public CardDto getCardInfoByCNo(Map<String, Object> msgMap, CardDto cardDto) {
+        log.info("getCardInfoByCNo");
+
+        cardDto.setC_no(Integer.parseInt(msgMap.get("c_no").toString()));
+
+        return iCardDaoMapper.selectCardByCNo(cardDto);
+    }
+
+    @Override
+    public int cardInfoModifyByCNo(Map<String, Object> msgMap, CardDto cardDto) {
+        log.info("cardInfoModifyByCNo");
+
+        cardDto.setC_no(Integer.parseInt(msgMap.get("c_no").toString()));
+        cardDto.setC_title(msgMap.get("c_title").toString());
+        cardDto.setC_body(msgMap.get("c_body").toString());
+
+
+        return iCardDaoMapper.updateCardInfoByCNo(cardDto);
     }
 }
