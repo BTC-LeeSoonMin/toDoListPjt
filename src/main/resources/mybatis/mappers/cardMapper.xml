@@ -70,5 +70,16 @@
             c_no = #{c_no}
     </update>
 
+    <update id="deleteCard">
+        UPDATE
+            tbl_card
+        SET
+            c_use_yn = "N"
+        WHERE
+            c_use_yn = "Y"
+          AND
+            c_no = #{c_no}
+    </update>
+
 
 </mapper>

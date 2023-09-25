@@ -88,4 +88,21 @@ public class CardController {
             return "0";
         }
     }
+
+    @PostMapping("/card_delete")
+    public String cardDelete(@RequestBody Map<String, Object> msgMap, CardDto cardDto){
+        log.info("cardDelete");
+
+        int result = -1;
+        result = cardService.cardDelete(msgMap, cardDto);
+
+        if(result > 0){
+            log.info("CARD DELETE SUCCESS");
+            return "1";
+        } else {
+            log.info("CARD DELETE FAIL");
+            return "0";
+        }
+
+    }
 }

@@ -18,4 +18,6 @@ public interface ICardDaoMapper {
     CardDto selectCardByCNo(CardDto cardDto);
 
     int updateCardInfoByCNo(CardDto cardDto);
+
+    int deleteCard(CardDto cardDto);
 }

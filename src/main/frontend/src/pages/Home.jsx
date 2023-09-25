@@ -19,6 +19,7 @@ import Textarea from '@mui/joy/Textarea';
 function Home() {
     const [cardList, setCardList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [updateState, setUpdateState] = useState(0);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [cntTask, setCntTask] = useState(1);
@@ -46,7 +47,7 @@ function Home() {
             )
             .catch(error => console.log(error))
 
-    }, [cntTask]);
+    }, [cntTask, updateState]);
 
     if (isLoading) {
         // 데이터가 로딩 중인 동안 보여줄 컴포넌트나 로딩 스피너 등을 렌더링
@@ -76,7 +77,17 @@ function Home() {
                     JSON.stringify(msgData),
                     config,
                 )
-                    .then(response => console.log(response.data))
+                    .then(response => {
+                        console.log("hle : " + response.data)
+                        if (response.data === 1) {
+                            alert("글 작성에 성공했습니다.")
+                            setTitle("");
+                            setBody("");
+                            setUpdateState(updateState + 1);
+                        } else {
+                            alert("글 작성에 실패했습니다.")
+                        }
+                    })
                     .catch(error => console.log(error))
                 break;
             case ("taskTogle"):
@@ -103,8 +114,26 @@ function Home() {
                 navigate("/card/card_modify/" + cNo);
 
                 break;
-            case ("close"):
-                console.log('close hello')
+            case ("delete"):
+                console.log('delete hello');
+                msgData = {
+                    "c_no": cNo,
+                }
+                if (window.confirm("정말 삭제 하시겠습니까?")) {
+                    await axios.post("/api/card/card_delete",
+                        msgData,
+                        config,
+                    )
+                        .then(response => {
+                            console.log(response.data);
+                            setUpdateState(updateState + 1);
+                        }
+                        )
+                        .catch(error => console.log(error))
+                } else {
+                    alert("삭제를 취소 하셨습니다.")
+                }
+
                 break;
         }
     }
@@ -120,14 +149,14 @@ function Home() {
                         <Box sx={{ flexGrow: 1, mb: 1.5 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={10.5}>
-                                    <Input name="title" placeholder='  Input title' onChange={(e) => setTitle(e.target.value)} />
+                                    <Input name="title" placeholder='  Input title' onChange={(e) => setTitle(e.target.value)} value={title} />
                                 </Grid>
                                 <Grid item xs={1}>
                                     <CreateOutlinedIcon onClick={() => iconClickHendler('insert')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                 </Grid>
                             </Grid>
                         </Box>
-                        <Textarea minRows={2} name="body" placeholder="What's your task?" onChange={(e) => setBody(e.target.value)} />
+                        <Textarea minRows={2} name="body" placeholder="What's your task?" onChange={(e) => setBody(e.target.value)} value={body} />
                     </CardContent>
                 </Card>
             </div>
@@ -144,7 +173,7 @@ function Home() {
                                         <Grid item xs={1.3} sx={{ borderBottom: 1, mb: 1 }}>
                                             {
                                                 item.c_cnt_task % 2 === 0 ?
-                                                    <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }}/>
+                                                    <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                                     : <EditAttributesIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
                                         </Grid>
@@ -160,7 +189,7 @@ function Home() {
                                                     : <PushPinIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
                                             <EditIcon onClick={() => iconClickHendler('edit', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
-                                            <CloseIcon onClick={() => iconClickHendler('close')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                            <CloseIcon onClick={() => iconClickHendler('delete', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                         </Grid>
                                     </Grid>
                                 </Box>
