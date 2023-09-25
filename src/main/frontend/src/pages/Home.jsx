@@ -21,11 +21,9 @@ function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
-    const [cNo, setCNo] = useState(0);
     const [cntTask, setCntTask] = useState(1);
     const [cntPin, setCntPin] = useState(0);
     const navigate = useNavigate();
-
 
     const config = {
         headers: {
@@ -35,16 +33,15 @@ function Home() {
 
     useEffect(() => {
         console.log("[Home] useEffect!!");
-        console.log("cntTask : ", cntTask);
+        console.log("cntTask1 : ", cntTask);
 
         axios.get("/api/card/cardAllList",
             config,
         )
             .then(response => {
-                // console.log(response.data),
-                setCardList(response.data)
+                // console.log(response.data)
+                setCardList(response.data);
                 setIsLoading(false);
-
             }
             )
             .catch(error => console.log(error))
@@ -55,7 +52,6 @@ function Home() {
         // 데이터가 로딩 중인 동안 보여줄 컴포넌트나 로딩 스피너 등을 렌더링
         return <h1>Loading...</h1>;
     }
-
 
     const cardStyle = {
         display: 'flex',
@@ -93,9 +89,6 @@ function Home() {
                     config,
                 )
                     .then(response => {
-                        // console.log(response.data.getC_no);
-                        // console.log(response.data.getCnt_task);
-                        setCNo(response.data.getC_no)
                         setCntTask(response.data.getCnt_task)
                     }
                     )
@@ -118,6 +111,9 @@ function Home() {
 
     return (
         <div style={cardStyle}>
+            {
+                console.log("return TP")
+            }
             <div>
                 <Card sx={{ maxWidth: 400, minWidth: 400, mt: 1.5, mb: 1.5 }}>
                     <CardContent>
@@ -147,11 +143,7 @@ function Home() {
                                         </Grid>
                                         <Grid item xs={1.3} sx={{ borderBottom: 1, mb: 1 }}>
                                             {
-                                                // XXXXXX (Too many re-render)
-                                                // CountSetHandler(setCntTask(item.c_cnt_task)) 
-                                            }
-                                            {
-                                                item.c_no == cNo && cntTask % 2 === 0 ?
+                                                item.c_cnt_task % 2 === 0 ?
                                                     <EditAttributesOutlinedIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }}/>
                                                     : <EditAttributesIcon onClick={() => iconClickHendler('taskTogle', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
@@ -163,7 +155,7 @@ function Home() {
                                         </Grid>
                                         <Grid item xs={3}>
                                             {
-                                                cntPin % 2 === 0 ?
+                                                item.c_pin % 2 === 0 ?
                                                     <PushPinOutlinedIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                                     : <PushPinIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
@@ -173,7 +165,7 @@ function Home() {
                                     </Grid>
                                 </Box>
                                 <Typography sx={{ mt: 1.5 }} color="text.secondary">
-                                    {item.c_body} / 현재 c_cnt_task 값 : {item.c_cnt_task}
+                                    {item.c_body}
                                 </Typography>
                             </CardContent>
                         </Card>
