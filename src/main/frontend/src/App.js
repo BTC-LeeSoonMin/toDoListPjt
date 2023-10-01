@@ -16,7 +16,6 @@ const App = () => {
         <Route path="/" element={<Home />}></Route>
         <Route path="/card/card_modify/:cNo" element={<CardModify />}></Route>
       </Routes>
-
       <Footer />
     </BrowserRouter>
 

@@ -70,4 +70,13 @@ public class CardService implements ICardService{
 
         return iCardDaoMapper.updateCardInfoByCNo(cardDto);
     }
+
+    @Override
+    public int cardDelete(Map<String, Object> msgMap, CardDto cardDto) {
+        log.info("cardDelete");
+
+        cardDto.setC_no(Integer.parseInt(msgMap.get("c_no").toString()));
+
+        return iCardDaoMapper.deleteCard(cardDto);
+    }
 }
