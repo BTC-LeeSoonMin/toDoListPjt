@@ -16,4 +16,6 @@ public interface ICardService {
     public int cardInfoModifyByCNo(Map<String, Object> msgMap, CardDto cardDto);
 
     public int cardDelete(Map<String, Object> msgMap, CardDto cardDto);
+
+    public int cardPin(Map<String, Object> msgMap, CardDto cardDto);
 }

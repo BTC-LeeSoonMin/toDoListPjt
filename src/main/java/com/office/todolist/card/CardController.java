@@ -105,4 +105,21 @@ public class CardController {
         }
 
     }
+
+    @PostMapping("/card_pin")
+    public String cardPin(@RequestBody Map<String, Object> msgMap, CardDto cardDto){
+        log.info("cardPin");
+
+        int result = -1;
+        result = cardService.cardPin(msgMap, cardDto);
+
+        if(result > 0){
+            log.info("CARD PIN SUCCESS");
+            return "1";
+        } else {
+            log.info("CARD PIN FAIL");
+            return "0";
+        }
+
+    }
 }

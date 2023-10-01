@@ -20,4 +20,8 @@ public interface ICardDaoMapper {
     int updateCardInfoByCNo(CardDto cardDto);
 
     int deleteCard(CardDto cardDto);
+
+    int updateCardPinUp(CardDto cardDto);
+
+    int updateCardPinDown(CardDto cardDto);
 }

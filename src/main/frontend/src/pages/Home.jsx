@@ -22,8 +22,8 @@ function Home() {
     const [updateState, setUpdateState] = useState(0);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
-    const [cntTask, setCntTask] = useState(1);
-    const [cntPin, setCntPin] = useState(0);
+    const [cntTask, setCntTask] = useState(0);
+    // const [cntPin, setCntPin] = useState(0);
     const navigate = useNavigate();
 
     const config = {
@@ -107,7 +107,19 @@ function Home() {
                 break;
             case ("pin"):
                 console.log('pin hello')
-                // setCntPin(cntPin + 1)
+                msgData = {
+                    "c_no": cNo,
+                }
+                await axios.post("/api/card/card_pin",
+                    msgData,
+                    config,
+                )
+                    .then(response => {
+                        // console.log(response.data);
+                        setUpdateState(updateState + 1);
+                    }
+                    )
+                    .catch(error => console.log(error));
                 break;
             case ("edit"):
                 console.log('edit hello')
@@ -185,8 +197,8 @@ function Home() {
                                         <Grid item xs={3}>
                                             {
                                                 item.c_pin % 2 === 0 ?
-                                                    <PushPinOutlinedIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
-                                                    : <PushPinIcon onClick={() => iconClickHendler('pin')} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                                    <PushPinOutlinedIcon onClick={() => iconClickHendler('pin', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
+                                                    : <PushPinIcon onClick={() => iconClickHendler('pin', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             }
                                             <EditIcon onClick={() => iconClickHendler('edit', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />
                                             <CloseIcon onClick={() => iconClickHendler('delete', item.c_no)} sx={{ "&:hover": { cursor: "pointer" } }} />

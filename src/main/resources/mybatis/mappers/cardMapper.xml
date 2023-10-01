@@ -20,6 +20,8 @@
             tbl_card
         WHERE
             c_use_yn = "Y"
+        ORDER BY
+            CASE WHEN c_pin = 1 THEN 0 ELSE 1 END, c_pin
     </select>
 
     <update id="updateCntTask">
@@ -75,6 +77,29 @@
             tbl_card
         SET
             c_use_yn = "N"
+        WHERE
+            c_use_yn = "Y"
+          AND
+            c_no = #{c_no}
+    </update>
+
+    <update id="updateCardPinUp">
+        UPDATE
+            tbl_card
+        SET
+            c_pin = c_pin + 1
+        WHERE
+            c_use_yn = "Y"
+          AND
+            c_no = #{c_no}
+
+    </update>
+
+    <update id="updateCardPinDown">
+        UPDATE
+            tbl_card
+        SET
+            c_pin = c_pin - 1
         WHERE
             c_use_yn = "Y"
           AND

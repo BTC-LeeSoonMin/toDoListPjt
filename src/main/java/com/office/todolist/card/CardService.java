@@ -79,4 +79,27 @@ public class CardService implements ICardService{
 
         return iCardDaoMapper.deleteCard(cardDto);
     }
+
+    @Override
+    public int cardPin(Map<String, Object> msgMap, CardDto cardDto) {
+        log.info("cardPin");
+
+        cardDto.setC_no(Integer.parseInt(msgMap.get("c_no").toString()));
+
+        // 고정 된 카드인지 확인하기 위한 c_pin 현재 값 check
+        cardDto = iCardDaoMapper.selectCardByCNo(cardDto);
+
+        if(cardDto != null){
+            if (cardDto.getC_pin() == 0) {
+                log.info("1111> {}", iCardDaoMapper.updateCardPinUp(cardDto));
+                return 1;
+
+            } else {
+                log.info("2222> {}", iCardDaoMapper.updateCardPinDown(cardDto));
+                return 1;
+            }
+        } else {
+            return 0;
+        }
+    }
 }
