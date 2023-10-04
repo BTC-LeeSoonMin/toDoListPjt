@@ -6,9 +6,15 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
+import { useEffect } from 'react';
 
 
 const Header = () => {
+
+    useEffect(() => {
+        console.log("[Header] useEffect CALLED!!")
+    })
+
     return (
         <header>
             <Box sx={{ flexGrow: 1 }}>
@@ -25,6 +31,7 @@ const Header = () => {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             <Link href="/" underline="none" color="inherit">{"To Do List"} </Link>
                         </Typography>
+                        <Link href="/member/sign_up" underline="none" color="inherit">{"SignUp"} </Link>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
                 </AppBar>

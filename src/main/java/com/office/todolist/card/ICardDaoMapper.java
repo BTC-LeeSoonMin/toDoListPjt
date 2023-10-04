@@ -1,5 +1,6 @@
 package com.office.todolist.card;
 
+import com.office.todolist.member.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -24,4 +25,5 @@ public interface ICardDaoMapper {
     int updateCardPinUp(CardDto cardDto);
 
     int updateCardPinDown(CardDto cardDto);
+
 }
