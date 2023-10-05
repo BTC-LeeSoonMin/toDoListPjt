@@ -23,7 +23,6 @@ function Home() {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [cntTask, setCntTask] = useState(0);
-    // const [cntPin, setCntPin] = useState(0);
     const navigate = useNavigate();
 
     const config = {

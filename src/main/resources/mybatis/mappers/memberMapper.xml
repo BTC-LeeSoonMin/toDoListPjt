@@ -4,12 +4,27 @@
 
 <mapper namespace="com.office.todolist.member.IMemberDaoMapper">
 
-    <insert id="insertMember" parameterType="com.office.todolist.member.MemberDto">
+    <insert id="insertMember"
+            parameterType="com.office.todolist.member.MemberDto">
         INSERT INTO
             tbl_member(m_id,m_pw,m_mail,m_phone,m_reg_date,m_mod_date)
         VALUES
             (#{m_id},#{m_pw},#{m_mail},#{m_phone}, NOW(), NOW())
 
     </insert>
+
+    <select id="selectMember"
+            parameterType="com.office.todolist.member.MemberDto"
+            resultType="com.office.todolist.member.MemberDto">
+        SELECT
+            *
+        FROM
+            tbl_member
+        WHERE
+            m_id = #{m_id}
+        AND
+            m_pw = #{m_pw}
+
+    </select>
 
 </mapper>

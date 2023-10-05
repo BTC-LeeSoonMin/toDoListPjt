@@ -12,9 +12,9 @@ import java.util.Date;
 
 @Service
 public class SecurityService {
-    private static final String SECRET_KEY = "wetlnjwevowyvel2rfweoyuwaecevo12hf1kpvjdovhdsv";
+    private static final String SECRET_KEY = "f1f13f13f3f1q3g35554vdvwebef1313g1g31g4dcsdvsdvbdv343f1f";
 
-    public String createToken(String subject, long expTime) {
+    public String createToken(String pw, long expTime) {
         if(expTime<=0){
             throw new RuntimeException("만료시간이 0보다 커야함");
         }
@@ -25,19 +25,27 @@ public class SecurityService {
 
         // builder 패턴으로 return 해줌
         return Jwts.builder()
-                .setSubject(subject)
+                .setSubject(pw)
                 .signWith(signingKey, signatureAlgorithm)
                 .setExpiration(new Date(System.currentTimeMillis() + expTime))
                 .compact();
     }
 
-    public String getSubject(String token){
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
-    }
+//    public String getSubject(String token){
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//        return claims.getSubject();
+//    }
+//    public Boolean loginCheck(String token){
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//        return claims.getSubject();
+//    }
 
 }

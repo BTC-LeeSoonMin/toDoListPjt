@@ -7,4 +7,5 @@ public interface IMemberDaoMapper {
 
     int insertMember(MemberDto memberDto);
 
+    MemberDto selectMember(MemberDto memberDto);
 }
