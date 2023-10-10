@@ -36,7 +36,7 @@ public class MemberService implements IMemberService{
     public Map<String, Object> memberSignIn(Map<String, Object> msgMap, MemberDto memberDto) {
         log.info("memberSignIn");
 
-//        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         memberDto.setM_id(msgMap.get("m_id").toString());
         memberDto.setM_pw(msgMap.get("m_pw").toString());
@@ -45,8 +45,11 @@ public class MemberService implements IMemberService{
 
         if (memberDto != null) {
             log.info("SIGNIN SUCCESS");
-
-            return securityController.createToken(msgMap.get("m_pw").toString());
+            msgMap = securityController.createToken(msgMap.get("m_pw").toString());
+            map.put("ACREToken", msgMap);
+//            msgMap = securityController.refrashToken(msgMap.get("m_pw").toString());
+//            map.put("refrashToken", msgMap);
+            return map;
 
         } else {
             log.info("SIGNIN FAIL");
@@ -54,5 +57,14 @@ public class MemberService implements IMemberService{
             return null;
         }
 
+    }
+
+    public Map<String, Object> refreshToken(Map<String, Object> msgMap) {
+        log.info("refreshToken");
+
+        Map<String, Object> map = new HashMap<>();
+        msgMap = securityController.createToken(msgMap.get("m_pw").toString());
+        map.put("refreshToken", msgMap);
+        return map;
     }
 }

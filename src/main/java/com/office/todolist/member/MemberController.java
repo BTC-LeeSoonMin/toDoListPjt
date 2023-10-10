@@ -44,14 +44,15 @@ public class MemberController {
     public Map<String, Object> memberSignIn(@RequestBody Map<String, Object> msgMap, MemberDto memberDto){
         log.info("memberSignIn");
 
-
         return memberService.memberSignIn(msgMap, memberDto);
 
     }
 
-    @GetMapping("/token_api")
-    public void tokenApi() {
-        log.info("tokenApi");
+    @PostMapping("/refreshToken")
+    public Map<String, Object> refreshToken(@RequestBody Map<String, Object> msgMap) {
+        log.info("refrashToken");
+
+        return memberService.refreshToken(msgMap);
 
     }
 

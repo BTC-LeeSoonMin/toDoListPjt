@@ -4,15 +4,17 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import { loginedAdmin } from '../atom/LoginSession'
+
+import { loginedAdminState } from '../atom/LoginSession'
 import { useRecoilState } from 'recoil';
 import { Button } from '@mui/joy';
-
-const SIGN_IN_FAIL = 0;
+import { Link } from 'react-router-dom';
 
 const Header = () => {
-    const [loginSession, setLoginSession] = useRecoilState(loginedAdmin);
+    const [accessToken, setAccessToken] = useRecoilState(loginedAdminState);
+    // const [loginSession, setLoginSession] = useRecoilState(
+    //     loginedAdminState,
+    // );
 
     const buttonClickHendler = async (str) => {
         console.log("[CardModify] buttonClickHendler");
@@ -23,16 +25,20 @@ const Header = () => {
             case ("SignOut"):
                 console.log('SignOut hello');
 
-                setLoginSession(null);
+                if (window.confirm("로그아웃을 원하십니까?")) {
+                    setAccessToken(null);
+                    localStorage.removeItem("refreshToken");
+
+                }
 
                 break;
         }
     }
 
     return (
-        
+
         <header>
-            <p>{loginSession}</p>
+            <p>{accessToken}</p>
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static">
                     <Toolbar>
@@ -45,20 +51,21 @@ const Header = () => {
                         >
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            <Link href="/" underline="none" color="inherit">{"To Do List"} </Link>
+                            <Link to="/" >To Do List</Link>
                         </Typography>
                         {
-                            loginSession != null ? 
-                                                
-                                            <>
-                                                <Button variant="outlined" color="error" onClick={() => buttonClickHendler('SignOut')}>SignOut</Button>
-                                            </>
-                                                
-                                              : 
-                                            <>
-                                                <Link href="/member/sign_up" underline="none" color="inherit">{"SignUp"} </Link> &nbsp;
-                                                <Link href="/member/sign_in" underline="none" color="inherit">{"SignIn"} </Link>
-                                             </>
+                            accessToken != null ?
+
+                                <>
+                                    <Button variant="outlined" color="error" onClick={() => buttonClickHendler('SignOut')}>SignOut</Button>
+                                    <Link to="/member/sign_up" >SignUp</Link> &nbsp;
+                                </>
+
+                                :
+                                <>
+                                    <Link to="/member/sign_up" >SignUp</Link> &nbsp;
+                                    <Link to="/member/sign_in" >SignIn </Link>
+                                </>
                         }
                     </Toolbar>
                 </AppBar>

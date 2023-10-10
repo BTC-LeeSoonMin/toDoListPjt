@@ -37,11 +37,19 @@ public class SecurityController {
 
     public Map<String, Object> createToken(String pw){
         log.info("createToken");
-        String token = securityService.createToken(pw, (2*1000*60));
+        String accessToken = securityService.accessToken(pw, (2*1000*60));
+        String refreshToken = securityService.refreshToken(pw, (5*1000*60));
         Map<String, Object> map =new HashMap<>();
-        map.put("result", token);
+        map.put("accessToken", accessToken);
+        map.put("refreshToken", refreshToken);
         return map;
     }
+//    public Map<String, Object> refrashToken(String pw){
+//        log.info("refrashToken");
+//        Map<String, Object> map =new HashMap<>();
+//        map.put("refrashTokenResult", token);
+//        return map;
+//    }
 
 //    @GetMapping("/loginCheck")
 //    public boolean loginCheck(@RequestParam(value = "token") String token) {
